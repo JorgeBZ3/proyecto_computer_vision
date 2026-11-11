@@ -114,7 +114,6 @@ def capture_images(camera_index=CAMERA_INDEX, width=WIDTH, height=HEIGHT):
 
     idx = next_image_index(CALIB_FOLDER)
     n_captured = 0
-    flash = 0  # frames de "flash" blanco tras capturar
 
     print("ESPACIO o 'c' -> capturar imagen | 'q' o ESC -> terminar y calibrar")
 
@@ -143,10 +142,6 @@ def capture_images(camera_index=CAMERA_INDEX, width=WIDTH, height=HEIGHT):
             cv2.putText(display, f"Capturas: {n_captured}", (20, 80),
                         cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
 
-            if flash > 0:
-                display = cv2.addWeighted(display, 0.5,
-                                          np.full_like(display, 255), 0.5, 0)
-                flash -= 1
 
             cv2.imshow(window_name, display)
 
@@ -158,7 +153,7 @@ def capture_images(camera_index=CAMERA_INDEX, width=WIDTH, height=HEIGHT):
                     print(f"Guardada {os.path.join(CALIB_FOLDER, name)}")
                     idx += 1
                     n_captured += 1
-                    flash = 3
+
                 else:
                     print("No se detecta el damero completo, imagen no guardada.")
             elif key in (ord('q'), 27):
