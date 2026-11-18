@@ -47,7 +47,7 @@ WIDTH, HEIGHT = 1280, 720
 # Criterio de refinamiento subpíxel (igual que en la práctica)
 CRITERIA = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.01)
 
-
+SISTEMA_OPERATIVO = "mac"
 
 def load_images(filenames: List) -> List:
     return [cv2.imread(img) for img in filenames]
@@ -100,8 +100,11 @@ def detect_preview(frame, scale=0.5):
 
 def capture_images(camera_index=CAMERA_INDEX, width=WIDTH, height=HEIGHT):
     os.makedirs(CALIB_FOLDER, exist_ok=True)
-
-    cap = cv2.VideoCapture(camera_index, cv2.CAP_DSHOW)  # CAP_DSHOW para Windows
+    if SISTEMA_OPERATIVO == "windows":
+        cap = cv2.VideoCapture(camera_index, cv2.CAP_DSHOW)  # CAP_DSHOW para Windows
+    elif SISTEMA_OPERATIVO == "mac":
+        cap = cv2.VideoCapture(camera_index, cv2.CAP_AVFOUNDATION)
+    
     if not cap.isOpened():
         print(f"No se pudo abrir la cámara (índice {camera_index}).")
         return False
