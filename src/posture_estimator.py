@@ -40,5 +40,6 @@ while True:
     
     cv2.imshow("Video", frame)
 
-    if cv2.waitKey(1) == "q":
+    if cv2.waitKey(1) == ord("q"):
+        cv2.destroyAllWindows()
         break
