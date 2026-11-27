@@ -27,15 +27,13 @@ def read_frame(capture):
 
 
 def track(detector, frame, counter, draw_body=False):
-    # Detecta la postura y actualiza el contador si se ven los puntos del ejercicio
-    # (brazos para curl y flexion, piernas para sentadilla).
+    # Detecta la postura y actualiza el contador si hay un cuerpo en la imagen.
     # Devuelve el frame y True si se acaba de completar una repeticion.
     frame = detector.find_pose(frame, draw=draw_body)
     lm_list = detector.find_position(frame, draw=False)
-    ids = [id for puntos in EJERCICIOS[counter.exercise]["puntos"] for id in puntos]
-    if len(lm_list) != 0 and detector.points_visible(ids):
+    if len(lm_list) != 0:
         return frame, counter.update(detector, frame)
-    draw_text(frame, "No se ve bien el cuerpo", (20, 100))
+    draw_text(frame, "No se detecta ningun cuerpo", (20, 100))
     return frame, False
 
 

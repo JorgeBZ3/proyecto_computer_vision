@@ -2,25 +2,25 @@
 Definicion de los ejercicios y del contador de repeticiones.
 Una repeticion solo cuenta si se recorre el rango de movimiento:
 posicion inicial (0%) -> rango completo (100%) -> vuelta a la posicion inicial (0%).
+Contiene:
+- los puntos (p1, p2, p3) del lado izquierdo y del derecho.
+- el rango de movimiento de 0% a 100% para completar una repeticion.
+- la posicion del tronco necesaria para hacer una repeticion (por ejemplo en flexiones tronco horizontal)
+- si el angulo se calcula en 3D o en 2D.
+- el lado del cuerpo que se usa (el mas cercano a la camara o los dos).
+- tecla para elegir el ejercicio
 """
 
 import numpy as np
 
-# ------------------------------------------------------------------
-# CONFIGURACIÓN (ajústala a tu gusto)
-# ------------------------------------------------------------------
-# puntos:   (p1, p2, p3) del lado izquierdo y del derecho. El angulo se mide en p2.
-# rango:    (angulo con el rango completo = 100%, angulo en la posicion inicial = 0%)
-#           No hace falta estirar del todo: basta con pasar del angulo del 0%.
-# posicion: postura del tronco necesaria para empezar/terminar la repeticion
-#           ("vertical", "horizontal" o None si da igual)
-# tecla:    tecla para elegir el ejercicio
 EJERCICIOS = {
     "curl": {
         "nombre": "Curl de biceps",
         "puntos": [(11, 13, 15), (12, 14, 16)],   # hombro - codo - muñeca
-        "rango": (50, 130),
+        "rango": (70, 130),
         "posicion": None,
+        "3d": False,    # Angulo 2D: la z que estima el modelo es poco fiable
+        "lado": "ambos",    # Se puede hacer con un solo brazo
         "tecla": "c",
     },
     "flexion": {
@@ -28,6 +28,8 @@ EJERCICIOS = {
         "puntos": [(11, 13, 15), (12, 14, 16)],   # hombro - codo - muñeca
         "rango": (90, 140),
         "posicion": "horizontal",
+        "3d": False,    # Angulo 2D: hacerla de perfil
+        "lado": "cercano",
         "tecla": "f",
     },
     "sentadilla": {
@@ -35,6 +37,8 @@ EJERCICIOS = {
         "puntos": [(23, 25, 27), (24, 26, 28)],   # cadera - rodilla - tobillo
         "rango": (100, 150),
         "posicion": "vertical",
+        "3d": False,    # Angulo 2D: hacerla de perfil
+        "lado": "cercano",
         "tecla": "s",
     },
 }
@@ -49,12 +53,22 @@ def exercise_from_key(key):
 
 
 def get_percentage(detector, frame, exercise, draw=True):
-    # Porcentaje del rango de movimiento (0-100%). Se calcula en los dos lados del
-    # cuerpo y se usa el mas flexionado, asi vale cualquier brazo/pierna.
+    # Porcentaje del rango de movimiento (0-100%).
     ej = EJERCICIOS[exercise]
+    if ej["lado"] == "cercano":
+        # Solo el lado mas cercano a la camara (el de menor z). De perfil, el brazo o
+        # la pierna del otro lado queda tapado y MediaPipe se lo inventa.
+        izq, der = ej["puntos"]
+        if detector.world_list[izq[0]][2] < detector.world_list[der[0]][2]:
+            lados = [izq]
+        else:
+            lados = [der]
+    else:
+        # Los dos lados y se usa el mas flexionado, asi vale cualquier brazo.
+        lados = ej["puntos"]
     per = 0
-    for p1, p2, p3 in ej["puntos"]:
-        angle = detector.find_angle(frame, p1, p2, p3, draw)
+    for p1, p2, p3 in lados:
+        angle = detector.find_angle(frame, p1, p2, p3, draw, ej["3d"])
         per = max(per, np.interp(angle, ej["rango"], (100, 0)))
     return per
 

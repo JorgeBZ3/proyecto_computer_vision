@@ -1,5 +1,6 @@
 """
 AI Trainer: menu principal.
+  Primero hay que desbloquear el sistema de seguridad.
   1 -> Modo basico (curl de biceps, flexion, sentadilla)
   2 -> Modo combinado (sentadilla + flexion)
   3 -> Modo competicion (2 jugadores, 1 minuto cada uno)
@@ -16,11 +17,10 @@ import modos
 from DrawModule import WINDOW_NAME, draw_screen
 from security_system import run_security_system
 
-
 # ------------------------------------------------------------------
 # CONFIGURACIÓN
 # ------------------------------------------------------------------
-SISTEMA_OPERATIVO = "windows"   # "mac", "windows" u otro (linux)
+SISTEMA_OPERATIVO = "mac"   # "mac", "windows" u otro (linux)
 CAMERA_INDEX = 0
 WIDTH, HEIGHT = 1280, 720
 
@@ -51,15 +51,11 @@ def main():
         print(f"No se pudo abrir la cámara (índice {CAMERA_INDEX}).")
         return
 
-    
-
     if run_security_system(capture):
-
-        detector = pm.poseDetector()
-        cv2.namedWindow(WINDOW_NAME, cv2.WINDOW_NORMAL)
-        
         try:
-            
+            detector = pm.poseDetector()
+            cv2.namedWindow(WINDOW_NAME, cv2.WINDOW_NORMAL)
+
             while True:
                 frame = modos.read_frame(capture)
                 if frame is None:
@@ -82,8 +78,13 @@ def main():
         except KeyboardInterrupt:
             pass
         finally:
+            # Se libera la camara al salir del menu
             capture.release()
             cv2.destroyAllWindows()
+    else:
+        # Si no se desbloquea la seguridad, tambien se libera la camara
+        capture.release()
+        cv2.destroyAllWindows()
 
 
 if __name__ == "__main__":

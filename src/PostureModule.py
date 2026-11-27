@@ -66,20 +66,17 @@ class poseDetector():
                 self.world_list.append([lm.x, lm.y, lm.z])
         return self.lm_list
 
-    def points_visible(self, ids, min_vis=0.5):
-        # True si los puntos ids estan dentro de la imagen y se ven bien.
-        # Si falta alguno, MediaPipe se lo inventa y puede confundir brazos y piernas.
-        for id in ids:
-            lm = self.results.pose_landmarks.landmark[id]
-            if lm.visibility < min_vis or not (0 < lm.x < 1 and 0 < lm.y < 1):
-                return False
-        return True
-
-    def find_angle(self, frame, p1, p2, p3, draw=True):
+    def find_angle(self, frame, p1, p2, p3, draw=True, use_3d=True):
         # Devuelve el angulo (en grados, 0-180) que forman los puntos p1-p2-p3, con el vertice en p2.
-        # Se calcula en 3D, asi sale igual estando de frente o de perfil a la camara.
-        a = np.array(self.world_list[p1]) - np.array(self.world_list[p2])
-        b = np.array(self.world_list[p3]) - np.array(self.world_list[p2])
+        # use_3d=True: con world_list (3D), sale igual de frente o de perfil, pero depende
+        #              de la z que estima el modelo.
+        # use_3d=False: con lm_list (2D), el angulo tal como se ve en la imagen.
+        if use_3d:
+            P1, P2, P3 = self.world_list[p1], self.world_list[p2], self.world_list[p3]
+        else:
+            P1, P2, P3 = self.lm_list[p1][1:], self.lm_list[p2][1:], self.lm_list[p3][1:]
+        a = np.array(P1) - np.array(P2)
+        b = np.array(P3) - np.array(P2)
         cos = np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b) + 1e-6)
         angle = math.degrees(math.acos(np.clip(cos, -1, 1)))
 
