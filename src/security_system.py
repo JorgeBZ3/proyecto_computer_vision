@@ -18,7 +18,7 @@ from sequence_decoder import create_decoder, reset_decoder, update_decoder
 
 
 # Password: change this list to modify it
-DEFAULT_PASSWORD = ["botella", "botella", "banda", "banda"]
+DEFAULT_PASSWORD = ["banda", "banda", "banda", "banda"]
 
 
 def get_time() -> float:

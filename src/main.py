@@ -14,6 +14,8 @@ import cv2
 import PostureModule as pm
 import modos
 from DrawModule import WINDOW_NAME, draw_screen
+from security_system import run_security_system
+
 
 # ------------------------------------------------------------------
 # CONFIGURACIÓN
@@ -49,34 +51,39 @@ def main():
         print(f"No se pudo abrir la cámara (índice {CAMERA_INDEX}).")
         return
 
-    detector = pm.poseDetector()
-    cv2.namedWindow(WINDOW_NAME, cv2.WINDOW_NORMAL)
+    
 
-    try:
-        while True:
-            frame = modos.read_frame(capture)
-            if frame is None:
-                print("No se recibe imagen (¿cámara desconectada?).")
-                break
+    if run_security_system(capture):
 
-            frame = draw_screen(frame, MENU)
-            cv2.imshow(WINDOW_NAME, frame)
+        detector = pm.poseDetector()
+        cv2.namedWindow(WINDOW_NAME, cv2.WINDOW_NORMAL)
+        
+        try:
+            
+            while True:
+                frame = modos.read_frame(capture)
+                if frame is None:
+                    print("No se recibe imagen (¿cámara desconectada?).")
+                    break
 
-            # Leer la opcion del menu
-            key = cv2.waitKey(1) & 0xFF
-            if key == ord("1"):
-                modos.modo_basico(capture, detector)
-            elif key == ord("2"):
-                modos.modo_combinado(capture, detector)
-            elif key == ord("3"):
-                modos.modo_competicion(capture, detector)
-            elif key in (ord("q"), 27):
-                break
-    except KeyboardInterrupt:
-        pass
-    finally:
-        capture.release()
-        cv2.destroyAllWindows()
+                frame = draw_screen(frame, MENU)
+                cv2.imshow(WINDOW_NAME, frame)
+
+                # Leer la opcion del menu
+                key = cv2.waitKey(1) & 0xFF
+                if key == ord("1"):
+                    modos.modo_basico(capture, detector)
+                elif key == ord("2"):
+                    modos.modo_combinado(capture, detector)
+                elif key == ord("3"):
+                    modos.modo_competicion(capture, detector)
+                elif key in (ord("q"), 27):
+                    break
+        except KeyboardInterrupt:
+            pass
+        finally:
+            capture.release()
+            cv2.destroyAllWindows()
 
 
 if __name__ == "__main__":
