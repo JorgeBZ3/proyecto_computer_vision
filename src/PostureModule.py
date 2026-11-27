@@ -12,7 +12,7 @@ import math
 
 class poseDetector():
     def __init__(self, mode=False, upBody=False, smooth=True,
-                  detectionCon=0.5, trackCon=0.5):
+                  detectionCon=0.8, trackCon=0.5):
         self.mode = mode    # Falso para que primero detecte postura, y luego solo la siga.
         self.upBody = upBody
         self.smooth = smooth
@@ -66,7 +66,7 @@ class poseDetector():
                 self.world_list.append([lm.x, lm.y, lm.z])
         return self.lm_list
 
-    def find_angle(self, frame, p1, p2, p3, draw=True, use_3d=True):
+    def find_angle(self, frame, p1, p2, p3, draw=True, use_3d=False):
         # Devuelve el angulo (en grados, 0-180) que forman los puntos p1-p2-p3, con el vertice en p2.
         # use_3d=True: con world_list (3D), sale igual de frente o de perfil, pero depende
         #              de la z que estima el modelo.
