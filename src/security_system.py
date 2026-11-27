@@ -125,6 +125,8 @@ def run_security_system(cap: cv2.VideoCapture, window_name: str = "Gimnasio virt
     decoder = create_decoder(DEFAULT_PASSWORD)
     granted_time = None
 
+    cv2.namedWindow(window_name, cv2.WINDOW_NORMAL | cv2.WINDOW_KEEPRATIO)
+
     while True:
         ret, frame = cap.read()
         if not ret:
