@@ -1,7 +1,4 @@
 """
-Asignatura: Visión por Ordenador
-Proyecto: Gimnasio virtual - Sistema de seguridad
-
 Módulo de detección de objetos de gimnasio. Cada objeto se identifica mediante
 segmentación por color en el espacio HSV y, a continuación, se verifica que la
 forma de la región segmentada sea coherente con el objeto esperado.

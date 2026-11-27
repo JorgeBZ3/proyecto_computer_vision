@@ -17,10 +17,8 @@ import modos
 from DrawModule import WINDOW_NAME, draw_screen
 from security_system import run_security_system
 
-# ------------------------------------------------------------------
 # CONFIGURACIÓN
-# ------------------------------------------------------------------
-SISTEMA_OPERATIVO = "mac"   # "mac", "windows" u otro (linux)
+SISTEMA_OPERATIVO = "mac"   # "mac" o "windows" 
 CAMERA_INDEX = 0
 WIDTH, HEIGHT = 1280, 720
 

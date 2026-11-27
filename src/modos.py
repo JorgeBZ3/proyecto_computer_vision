@@ -39,9 +39,7 @@ def track(detector, frame, counter, draw_body=False):
     return frame, False
 
 
-# ------------------------------------------------------------------
 # 1) Modo basico
-# ------------------------------------------------------------------
 def modo_basico(capture, detector):
     exercise = "curl"
     counter = repCounter(exercise)
@@ -75,9 +73,7 @@ def modo_basico(capture, detector):
             break
 
 
-# ------------------------------------------------------------------
 # 2) Modo combinado: sentadilla + flexion
-# ------------------------------------------------------------------
 def modo_combinado(capture, detector):
     fase = 0            # Ejercicio de la secuencia que toca hacer
     counter = repCounter(SECUENCIA_COMBINADA[fase])
@@ -115,9 +111,7 @@ def modo_combinado(capture, detector):
             break
 
 
-# ------------------------------------------------------------------
 # 3) Modo competicion: 2 jugadores a la vez
-# ------------------------------------------------------------------
 def modo_competicion(capture, detector):
     # MediaPipe Pose solo detecta una persona por imagen, asi que la imagen se parte en dos
     # mitades: el jugador 1 a la izquierda y el jugador 2 a la derecha, cada uno con su detector.

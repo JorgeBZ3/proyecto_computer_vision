@@ -1,7 +1,4 @@
 """
-Asignatura: Visión por Ordenador
-Proyecto: Gimnasio virtual - Sistema de seguridad
-
 Decodificador de secuencias. Memoriza hasta 4 objetos consecutivos y concede
 o bloquea el acceso según si coinciden con la contraseña. No depende de la
 cámara: en cada frame recibe el objeto detectado (o None) y el instante

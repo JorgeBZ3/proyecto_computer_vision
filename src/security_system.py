@@ -1,7 +1,4 @@
 """
-Asignatura: Visión por Ordenador
-Proyecto: Gimnasio virtual - Sistema de seguridad
-
 Bucle principal del sistema de seguridad. Lee la cámara, detecta el objeto que
 se muestra en el recuadro, actualiza el decodificador y dibuja la interfaz.
 Para juntarlo con el sistema principal basta con llamar a run_security_system()
