@@ -18,7 +18,6 @@ CALIBRATION_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 DEFAULT_HSV_RANGES = {
     "botella": (np.array([172, 150, 70]), np.array([6, 255, 255])),    # red (H min > H max)
     "mancuerna": (np.array([100, 120, 60]), np.array([125, 255, 255])),  # blue
-    "pelota": (np.array([43, 80, 50]), np.array([85, 255, 255])),        # green
     "banda": (np.array([22, 100, 70]), np.array([33, 255, 255])),        # yellow
 }
 
@@ -26,7 +25,6 @@ DEFAULT_HSV_RANGES = {
 DRAW_COLORS = {
     "botella": (0, 0, 255),
     "mancuerna": (255, 0, 0),
-    "pelota": (0, 255, 0),
     "banda": (0, 255, 255),
 }
 

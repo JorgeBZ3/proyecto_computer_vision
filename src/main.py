@@ -14,8 +14,10 @@ import cv2
 
 import PostureModule as pm
 import modos
-from DrawModule import WINDOW_NAME, draw_screen
+from DrawModule import WINDOW_NAME, draw_screen, draw_fps
 from security_system import run_security_system
+
+import time
 
 # CONFIGURACIÓN
 SISTEMA_OPERATIVO = "windows"   # "mac" o "windows" 
@@ -54,6 +56,8 @@ def main():
             detector = pm.poseDetector()
             cv2.namedWindow(WINDOW_NAME, cv2.WINDOW_NORMAL)
 
+            prev_time = time.time()
+
             while True:
                 frame = modos.read_frame(capture)
                 if frame is None:
@@ -61,6 +65,9 @@ def main():
                     break
 
                 frame = draw_screen(frame, MENU)
+                
+                prev_time = draw_fps(frame, prev_time)
+
                 cv2.imshow(WINDOW_NAME, frame)
 
                 # Leer la opcion del menu

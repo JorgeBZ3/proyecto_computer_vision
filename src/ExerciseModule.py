@@ -17,7 +17,7 @@ EJERCICIOS = {
     "curl": {
         "nombre": "Curl de biceps",
         "puntos": [(11, 13, 15), (12, 14, 16)],   # hombro - codo - muñeca
-        "rango": (70, 130),
+        "rango": (45, 130),
         "posicion": None,
         "3d": False,    # Angulo 2D: la z que estima el modelo es poco fiable
         "lado": "ambos",    # Se puede hacer con un solo brazo

@@ -5,6 +5,7 @@ Funciones para dibujar la interfaz sobre el frame.
 
 import cv2
 import numpy as np
+import time
 
 WINDOW_NAME = "AI Trainer"
 # Fuente de los textos. Otras opciones: cv2.FONT_HERSHEY_DUPLEX, cv2.FONT_HERSHEY_TRIPLEX,
@@ -39,3 +40,11 @@ def draw_screen(frame, lines):
     for i, line in enumerate(lines):
         draw_text(frame, line, (100, 150 + 70 * i), 1.3)
     return frame
+
+def draw_fps(frame, prev_time):
+    # FPS in the top-left corner. Returns the current time for the next frame.
+    h, w = frame.shape[0:2]
+    now = time.time()
+    fps = 1 / (now - prev_time) if now > prev_time else 0
+    draw_text(frame, f"FPS: {int(fps)}", (w - 160, 30), 0.8, (0, 255, 0), 2)
+    return now

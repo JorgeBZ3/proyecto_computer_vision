@@ -13,8 +13,12 @@ import numpy as np
 from color_detector import DRAW_COLORS, detect_object, load_hsv_ranges
 from sequence_decoder import create_decoder, reset_decoder, update_decoder
 
+import time 
+from DrawModule import draw_fps
 
-# Password: change this list to modify it
+
+# Password: change this list to modify it.
+# The objects are: botella, mancuerna and banda
 DEFAULT_PASSWORD = ["banda", "banda", "banda", "banda"]
 
 
@@ -127,6 +131,8 @@ def run_security_system(cap: cv2.VideoCapture, window_name: str = "Gimnasio virt
 
     cv2.namedWindow(window_name, cv2.WINDOW_NORMAL | cv2.WINDOW_KEEPRATIO)
 
+    prev_time = time.time()
+
     while True:
         ret, frame = cap.read()
         if not ret:
@@ -140,6 +146,9 @@ def run_security_system(cap: cv2.VideoCapture, window_name: str = "Gimnasio virt
         state = update_decoder(decoder, detected, now)
 
         draw_interface(frame, [x1, y1, x2, y2], decoder, detected, hull, now)
+
+        prev_time = draw_fps(frame, prev_time)
+        
         cv2.imshow(window_name, frame)
         key = cv2.waitKey(1) & 0xFF
 
@@ -148,6 +157,8 @@ def run_security_system(cap: cv2.VideoCapture, window_name: str = "Gimnasio virt
             if granted_time is None:
                 granted_time = now
             elif now - granted_time >= 1.5:
+                cv2.destroyWindow(window_name)
+                cv2.waitKey(1)  # let OpenCV process the close event
                 return True
 
         if key == ord("q"):

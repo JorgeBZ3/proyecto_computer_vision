@@ -13,7 +13,7 @@ import numpy as np
 
 import PostureModule as pm
 from ExerciseModule import EJERCICIOS, repCounter, exercise_from_key
-from DrawModule import WINDOW_NAME, draw_text, draw_bar, draw_count, draw_screen
+from DrawModule import WINDOW_NAME, draw_text, draw_bar, draw_count, draw_screen, draw_fps
 
 SECUENCIA_COMBINADA = ["sentadilla", "flexion"]   # Orden del ejercicio combinado
 TIEMPO_COMPETICION = 60     # Segundos que dura la competicion
@@ -45,6 +45,8 @@ def modo_basico(capture, detector):
     counter = repCounter(exercise)
     draw_body = False   # Para quitar o poner diagrama de puntos sobre el cuerpo.
 
+    prev_time = time.time()
+
     while True:
         frame = read_frame(capture)
         if frame is None:
@@ -57,6 +59,8 @@ def modo_basico(capture, detector):
                   (280, frame.shape[0] - 20), 0.7)
         draw_bar(frame, counter.per, counter.dir)
         draw_count(frame, counter.count)
+
+        prev_time = draw_fps(frame, prev_time)
 
         cv2.imshow(WINDOW_NAME, frame)
 
@@ -80,6 +84,8 @@ def modo_combinado(capture, detector):
     total = 0           # Repeticiones combinadas completas
     draw_body = False
 
+    prev_time = time.time()
+
     while True:
         frame = read_frame(capture)
         if frame is None:
@@ -97,6 +103,8 @@ def modo_combinado(capture, detector):
         draw_text(frame, "r: reiniciar | d: esqueleto | q: menu", (280, frame.shape[0] - 20), 0.7)
         draw_bar(frame, counter.per, counter.dir)
         draw_count(frame, total)
+
+        prev_time = draw_fps(frame, prev_time)
 
         cv2.imshow(WINDOW_NAME, frame)
 
@@ -121,6 +129,8 @@ def modo_competicion(capture, detector):
     counters = [repCounter(exercise), repCounter(exercise)]
     t_inicio = 0
 
+    prev_time = time.time()
+    
     while True:
         frame = read_frame(capture)
         if frame is None:
@@ -177,6 +187,8 @@ def modo_competicion(capture, detector):
         # Linea que separa a los dos jugadores
         if estado == "jugando":
             cv2.line(frame, (mitad, 0), (mitad, h), (255, 255, 255), 2)
+
+        prev_time = draw_fps(frame, prev_time)
 
         cv2.imshow(WINDOW_NAME, frame)
 
